@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Beerfinder</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style type="text/css">
+    .jumbotron {
+        padding-top: 20px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <form action="" method="POST" class="form-inline" role="form">
+                <div class="form-group">
+                    <h1>Search for beer</h1>
+                    <form action="" method="POST" class="form-inline" role="form">
+                        <div class="form-group">
+                            <label class="sr-only" for="">label</label>
+                            <input type="text" class="form-control" id="beerBrand_imput" placeholder="Write here your favourite beer brand...">
+                        </div>
+                        <button id="beerBrand_button" type="submit" class="btn btn-primary">Search for beer</button>
+                    </form>
+                </div>
+        </div>
+        <div class="jumbotron">
+            <h1>List of beers:</h1>
+            <select id="list-beer-group" class="input-lg"></select>
+        </div>
+        <div class="jumbotron">
+            <h1 class="description">Description</h1>
+            <div id="beerresults">
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <body>
+        <!-- jumbotrom -->
+        <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+        <script type="text/javascript">
+        $('#beerBrand_button').on('click', function(e) {
+                e.preventDefault()
+                var queryBeer = $('#beerBrand_imput').val();
+                console.log(queryBeer)
+                var urlBeer = 'https://quiet-inlet-67115.herokuapp.com/api/search/all?q=' + queryBeer
+                $.ajax({
+                    url: urlBeer,
+                    success: function(data) {
+                        var nameBrand = data
+                        var beerList = ''
+                        nameBrand.forEach(function(beerName) {
+                            beerList += '<option value="' + beerName.id + '" >' + beerName.name + '</option>'
+                        })
+                        $("#list-beer-group").html(beerList)
+                    }
+                })
+            })
+        
+            // End firt page
+
+        $('#list-beer-group').on('change', function(e) {
+            e.preventDefault()
+            var description = $(this).val();
+            console.log(description)
+            var urlBrandBeer = 'https://quiet-inlet-67115.herokuapp.com/api/beer/' + description
+            console.log(urlBrandBeer)
+            $.ajax({
+                url: urlBrandBeer,
+                success: function(data) {
+                    var beerName = '<p>' + data.name + '<p>'
+                    console.log(beerStyle)
+                    var beerStyle = '<p>' + data.style.category.name + '<p>'
+                    var beerDescription = '<p>' + data.style.description + '<p>'
+                    var beerAvailable = '<p>' + data.available.name + '<p>' + data.available.description + '<p>'
+                    var totalBeerDefiniton = beerName + beerStyle + beerDescription + beerAvailable
+                    $("#beerresults").html(totalBeerDefiniton)
+                }
+            })
+        })
+        </script>
+    </body>
+
+</html>
